@@ -1,5 +1,6 @@
 package com.hellodemo
 
+import android.R
 import android.app.Application
 import com.facebook.react.PackageList
 import com.facebook.react.ReactApplication
@@ -9,7 +10,12 @@ import com.facebook.react.ReactPackage
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.load
 import com.facebook.react.defaults.DefaultReactHost.getDefaultReactHost
 import com.facebook.react.defaults.DefaultReactNativeHost
+import com.facebook.react.uimanager.util.ReactFindViewUtil
 import com.facebook.soloader.SoLoader
+import com.netcore.android.Smartech
+import com.smartechbasereactnative.SmartechBasePlugin
+import java.lang.ref.WeakReference
+
 
 class MainApplication : Application(), ReactApplication {
 
@@ -35,6 +41,27 @@ class MainApplication : Application(), ReactApplication {
   override fun onCreate() {
     super.onCreate()
     SoLoader.init(this, false)
+    Smartech.getInstance(WeakReference(this)).initializeSdk(this)
+    val smartechBasePlugin = SmartechBasePlugin.getInstance()
+    smartechBasePlugin.init(this)
+
+    val nativeIdSet: MutableSet<String> = HashSet()
+    nativeIdSet.add("hansel_ignore_container")
+//    ReactFindViewUtil.addViewsListener({ view, nativeID ->
+//      view.setTag(
+//        R.id.hansel_ignore_view,
+//        true
+//      )
+//    }, nativeIdSet)
+
+//    Smartech.setDebugLevel(SMTDebugLevel.Level.VERBOSE);
+//    HSLLogLevel.all.setEnabled(true);
+//    HSLLogLevel.mid.setEnabled(true);
+//    HSLLogLevel.debug.setEnabled(true);
+    Smartech.getInstance(WeakReference(applicationContext)).setDebugLevel(9)
+
+
+
     if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
       // If you opted-in for the New Architecture, we load the native entry point for this app.
       load()
